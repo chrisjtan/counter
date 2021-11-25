@@ -2,11 +2,9 @@ import argparse
 
 def arg_parser_pre_processing_yelp():
     parser = argparse.ArgumentParser()
-    # parser.add_argument("--dataset", dest="dataset", type=str, default="yelp",
-    #                     help="choose dataset")
-    parser.add_argument("--sentires_dir", dest="sentires_dir", type=str, default="", 
+    parser.add_argument("--sentires_dir", dest="sentires_dir", type=str, default="./datasets/Yelp/reviews.pickle", 
                         help="path to pre-extracted sentires data")
-    parser.add_argument("--review_dir", dest="review_dir", type=str, default="", 
+    parser.add_argument("--review_dir", dest="review_dir", type=str, default="./datasets/Yelp/yelp_academic_dataset_review.json", 
                         help="path to original review data")
     parser.add_argument("--user_thresh", dest="user_thresh", type=int, default=20, 
     help="remove users with reviews less than this threshold")
