@@ -1,6 +1,6 @@
 import argparse
 
-def arg_parser_pre_processing():
+def arg_parser_preprocessing():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", dest="dataset", type=str, default="yelp")
     parser.add_argument("--sentires_dir", dest="sentires_dir", type=str, default="./datasets/Yelp/reviews.pickle", 
