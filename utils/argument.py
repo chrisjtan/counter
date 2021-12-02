@@ -25,11 +25,13 @@ def arg_parser_preprocessing():
 
 def arg_parse_train_base():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", dest="dataset", type=str, default="yelp")
     parser.add_argument("--gpu", dest="gpu", action="store_false", help="whether to use gpu")
     parser.add_argument("--cuda", dest="cuda", type=str, default='0', help="which cuda")
     parser.add_argument("--weight_decay", dest="weight_decay", type=float, default='1e-5', help="L2 norm to the wights")
     parser.add_argument("--lr", dest="lr", type=float, default=0.0005, help="learning rate for training")
     parser.add_argument("--epoch", dest="epoch", type=int, default=1000, help="training epoch")
-    parser.add_argument("--batch_size", dest="batch_size", type=int, default=256, help="batch size for training base rec model")
+    parser.add_argument("--batch_size", dest="batch_size", type=int, default=128, help="batch size for training base rec model")
     parser.add_argument("--embedding_length", dest="embedding_length", type=int, default=256, help="implicit feature length")
+    parser.add_argument("--rec_k", dest="rec_k", type=int, default=5, help="length of rec list")
     return parser.parse_args()

@@ -114,7 +114,7 @@ def get_user_attention_matrix(sentiment_data, user_num, feature_list, max_range=
             else:
                 norm_v = 1 + (max_range - 1) * ((2 / (1 + np.exp(-user_counting_matrix[i, j]))) - 1)  # norm score
             user_attention_matrix[i, j] = norm_v
-    user_attention_matrix = np.array(user_attention_matrix)
+    user_attention_matrix = np.array(user_attention_matrix, dtype='float32')
     return user_attention_matrix
 
 
@@ -150,7 +150,7 @@ def get_item_quality_matrix(sentiment_data, item_num, feature_list, max_range=5)
             else:
                 norm_v = 1 + ((max_range - 1) / (1 + np.exp(-item_sentiment_matrix[i, j])))  # norm score
             item_quality_matrix[i, j] = norm_v
-    item_quality_matrix = np.array(item_quality_matrix)
+    item_quality_matrix = np.array(item_quality_matrix, dtype='float32')
     return item_quality_matrix
 
 

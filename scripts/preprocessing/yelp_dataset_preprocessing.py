@@ -219,7 +219,7 @@ class YelpDataset():
         for user, test_items in self.user_hist_inter_dict_test.items():
             user_item_label_list.append([user, test_items, np.ones(len(test_items))])  # add the test items
             negative_items = [item for item in self.items if 
-                item not in set(self.user_hist_inter_dict[user])]  # the not interacted items
+                item not in self.user_hist_inter_dict[user]]  # the not interacted items
             negative_items = np.random.choice(np.array(negative_items), self.args.neg_length, replace=False)
             user_item_label_list[-1][1] = np.concatenate((user_item_label_list[-1][1], negative_items), axis=0)
             user_item_label_list[-1][2] = np.concatenate((user_item_label_list[-1][2], np.zeros(self.args.neg_length)), axis=0)
