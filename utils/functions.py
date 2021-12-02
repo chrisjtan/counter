@@ -5,6 +5,76 @@ import matplotlib.pyplot as plt
 np.random.seed(0)
 
 
+
+def sentiment_data_filtering(sentiment_data, user_thresh, feature_thresh):
+    """
+    filter the sentiment data, remove the users with less review number less than "user_thresh" and remove the features
+    mentioned less than "feature_thresh" or don't contain letters.
+    :param sentiment_data: [userID, itemID, [fos triplet 1], [fos triplet 2], ...]
+    :param user_thresh: the threshold for user reviews
+    :param feature_thresh: the threshold features
+    :return: the filtered sentiment data
+    """
+    print('======================= filtering sentiment data =======================')
+    sentiment_data = np.array(sentiment_data)
+    last_length = len(sentiment_data)
+    un_change_count = 0  # iteratively filtering users and features, if the data stay unchanged twice, stop
+    user_dict, item_dict = get_user_item_dict(sentiment_data)
+    features = get_feature_list(sentiment_data)
+    print("original review length: ", len(sentiment_data))
+    print("original user length: ", len(user_dict))
+    print("original item length: ", len(item_dict))
+    print("original feature length: ", len(features))
+    while True:
+        # feature filtering
+        feature_count_dict = {}
+        for row in sentiment_data:
+            for fos in row[2:]:
+                feature = fos[0]
+                if feature not in feature_count_dict:
+                    feature_count_dict[feature] = 1
+                else:
+                    feature_count_dict[feature] += 1
+        valid_features = set()
+        for key, value in feature_count_dict.items():
+            if check_string(key) and value > feature_thresh:
+                valid_features.add(key)
+        # sentiment_data = [row for row in sentiment_data if row[2][0] in valid_features]
+        sentiment_data = feature_filtering(sentiment_data, valid_features)
+        length = len(sentiment_data)
+        if length != last_length:
+            last_length = length
+            un_change_count = 0
+        else:
+            un_change_count += 1
+            if un_change_count == 2:
+                break
+        # user filtering
+        user_dict, item_dict = get_user_item_dict(sentiment_data)
+        valid_user = set()  # the valid users
+        for key, value in user_dict.items():
+            if len(value) > (user_thresh - 1):
+                valid_user.add(key)
+        sentiment_data = [x for x in sentiment_data if x[0] in valid_user]  # remove user with small interactions
+        length = len(sentiment_data)
+        if length != last_length:
+            last_length = length
+            un_change_count = 0
+        else:
+            un_change_count += 1
+            if un_change_count == 2:
+                break
+    user_dict, item_dict = get_user_item_dict(sentiment_data)
+    features = get_feature_list(sentiment_data)
+    print('valid review length: ', len(sentiment_data))
+    print("valid user: ", len(user_dict))
+    print('valid item : ', len(item_dict))
+    print("valid feature length: ", len(features))
+    print('user dense is:', len(sentiment_data) / len(user_dict))
+    sentiment_data = np.array(sentiment_data)
+    return sentiment_data
+
+
 def get_feature_list(sentiment_data):
     """
     from user sentiment data, get all the features [F1, F2, ..., Fk] mentioned in the reviews
@@ -122,30 +192,20 @@ def get_user_item_set(sentiment_data):
     return user_set, item_set
 
 
-def sample_training_evaluation_pairs(user, training_dict, item_set,
-                                     eval_num=1, sample_ratio=10):
-    positive_items = set(training_dict[user])
+def sample_training_pairs(user, training_items, item_set, sample_ratio=10):
+    positive_items = set(training_items)
     negative_items = set()
     for item in item_set:
         if item not in positive_items:
             negative_items.add(item)
     neg_length = len(positive_items) * sample_ratio
     negative_items = np.random.choice(np.array(list(negative_items)), neg_length, replace=False)
-    train_positive = list(positive_items)[:-eval_num]
-    eval_positive = list(positive_items)[-eval_num:]
-    train_negative = list(negative_items)[:-(eval_num * sample_ratio)]
-    eval_negative = list(negative_items)[-(eval_num * sample_ratio):]
     train_pairs = []
-    eval_pairs = []
-    for p_item in train_positive:
+    for p_item in positive_items:
         train_pairs.append([user, p_item, 1])
-    for n_item in train_negative:
+    for n_item in negative_items:
         train_pairs.append([user, n_item, 0])
-    for p_item in eval_positive:
-        eval_pairs.append([user, p_item, 1])
-    for n_item in eval_negative:
-        eval_pairs.append([user, n_item, 0])
-    return train_pairs, eval_pairs
+    return train_pairs
 
 
 def check_string(string):

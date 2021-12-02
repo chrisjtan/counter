@@ -14,9 +14,10 @@ def arg_parser_preprocessing():
     parser.add_argument("--training_ratio", dest="training_length", type=float, default=0.9, 
     help="the number of training items")
     parser.add_argument("--sample_ratio", dest="sample_ratio", type=int, default=2, 
-                        help="the negative: positive sample ratio for training BPR loss")
-    parser.add_argument("--neg_length", dest="neg_length", type=int, default=9, 
-    help="num of sampled items in evaluation")
+                        help="the (negative: positive sample) ratio for training BPR loss")
+    parser.add_argument("--test_ratio", dest="test_ratio", type=float, default=0.1, 
+    help="test data percentage")
+    parser.add_argument("--neg_length", dest="neg_length", type=int, default=100, help="# of negative samples in evaluation")
     parser.add_argument("--save_path", dest="save_path", type=str, default="./dataset_objs/", 
     help="The path to save the preprocessed dataset object")
     return parser.parse_args()
@@ -24,7 +25,6 @@ def arg_parser_preprocessing():
 
 def arg_parse_train_base():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", dest="dataset", type=str, default="yelp")
     parser.add_argument("--gpu", dest="gpu", action="store_false", help="whether to use gpu")
     parser.add_argument("--cuda", dest="cuda", type=str, default='0', help="which cuda")
     parser.add_argument("--weight_decay", dest="weight_decay", type=float, default='1e-5', help="L2 norm to the wights")
