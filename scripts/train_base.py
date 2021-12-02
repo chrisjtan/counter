@@ -73,7 +73,7 @@ def train_base_recommendation(train_args, pre_processing_args):
             model, 
             device)
             print('epoch %d: ' % epoch, 'training loss: ', ave_train, 'NDCG: ', ndcg)
-    torch.save(model.state_dict(), os.path.join(out_path, "model.model" % epoch))
+    torch.save(model.state_dict(), os.path.join(out_path, "model.model"))
     return 0
 
 

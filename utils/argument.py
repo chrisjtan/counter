@@ -35,3 +35,11 @@ def arg_parse_train_base():
     # parser.add_argument("--embedding_length", dest="embedding_length", type=int, default=256, help="implicit feature length")
     parser.add_argument("--rec_k", dest="rec_k", type=int, default=5, help="length of rec list")
     return parser.parse_args()
+
+
+def arg_parse_exp_optimize():
+    parser = argparse.ArgumentParser()
+    parser.add_argument()
+    parser.add_argument("--gpu", dest="gpu", action="store_false", help="whether to use gpu")
+    parser.add_argument("--cuda", dest="cuda", type=str, default='0', help="which cuda")
+    parser.add_argument("--base_model_path", dest="base_model_path", type=str, default="logs/yelp_logs_both/base_model.model")
