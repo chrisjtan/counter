@@ -39,7 +39,14 @@ def arg_parse_train_base():
 
 def arg_parse_exp_optimize():
     parser = argparse.ArgumentParser()
-    parser.add_argument()
+    parser.add_argument("--dataset", dest="dataset", type=str, default="yelp")
     parser.add_argument("--gpu", dest="gpu", action="store_false", help="whether to use gpu")
     parser.add_argument("--cuda", dest="cuda", type=str, default='0', help="which cuda")
-    parser.add_argument("--base_model_path", dest="base_model_path", type=str, default="logs/yelp_logs_both/base_model.model")
+    # parser.add_argument("--base_model_path", dest="base_model_path", type=str, default="logs/yelp_logs/model.model")
+    parser.add_argument("--data_obj_path", dest="data_obj_path", type=str, 
+        default="./dataset_objs/", help="the path to the saved dataset object in the training phase")
+    parser.add_argument("--lam", dest="lam", type=float, default=100, help="the hyper-param for pairwise loss")
+    parser.add_argument("--gam", dest="gam", type=float, default=0.1, help="the hyper-param for L1 reg")
+    parser.add_argument("--alp", dest="alp", type=float, default=0.05, help="margin value for pairwise loss")
+
+    return parser.parse_args()
