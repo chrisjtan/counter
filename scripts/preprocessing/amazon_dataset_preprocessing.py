@@ -10,7 +10,7 @@ from utils.functions import sentiment_data_filtering, get_user_item_dict, get_fe
     get_user_attention_matrix, get_item_quality_matrix, sample_training_pairs
 
 
-class YelpDataset():
+class AmazonDataset():
     def __init__(self, preprocessing_args):
         super().__init__()
         self.args = preprocessing_args
@@ -46,22 +46,25 @@ class YelpDataset():
         self.sample_test()  # sample test data
 
     def pre_processing(self,):
-        sentires_data = np.load(self.args.sentires_dir, allow_pickle=True)
         sentiment_data = []  # [userID, itemID, [fos triplet 1], [fos triplet 2], ...]
-        for line in sentires_data:
-            user = line['user']
-            item = line['item']
-            feature = line['template'][0]
-            opinion = line['template'][1]
-            sentiment = line['template'][3]
-            if sentiment == 1:
-                sentiment = "+1"
-            elif sentiment == -1:
-                sentiment = "-1"
-            else:
-                print("sentiment data error")
-                exit(1)
-            sentiment_data.append([user, item, [feature, opinion, sentiment]])
+        with open(self.args.sentires_dir, 'r') as f:
+            line = f.readline().strip()
+            while line:
+                # print(count)
+                # print('line', line)
+                user = line.split('@')[0]
+                item = line.split('@')[1]
+                sentiment_data.append([user, item])
+                l = len(user) + len(item)
+                fosr_data = line[l+3:]
+                for seg in fosr_data.split('||'):
+                    fos = seg.split(':')[0].strip('|')
+                    if len(fos.split('|')) > 1:
+                        feature = fos.split('|')[0]
+                        opinion = fos.split('|')[1]
+                        sentiment = fos.split('|')[2]
+                        sentiment_data[-1].append([feature, opinion, sentiment])
+                line = f.readline().strip()
         sentiment_data = np.array(sentiment_data)
         sentiment_data = sentiment_data_filtering(
             sentiment_data, 
@@ -69,15 +72,16 @@ class YelpDataset():
             self.args.feature_thresh)
         user_dict, item_dict = get_user_item_dict(sentiment_data)  # not sorted with time
         user_item_date_dict = {}   # {(user, item): date, (user, item): date ...}  # used to remove duplicate
+
         for i, line in enumerate(open(self.args.review_dir, "r")):
             record = json.loads(line)
-            user = record['user_id']
-            item = record['business_id']
-            date = record['date']
+            user = record['reviewerID']
+            item = record['asin']
+            date = record['unixReviewTime']
             if user in user_dict and item in user_dict[user] and (user, item) not in user_item_date_dict:
                 user_item_date_dict[(user, item)] = date
 
-        # remove the (user, item) not exist in the official yelp dataset, possibly due to update?
+        # remove the (user, item) not exist in the official dataset, possibly due to update?
         sentiment_data = [row for row in sentiment_data if (row[0], row[1]) in user_item_date_dict]
         sentiment_data = sentiment_data_filtering(sentiment_data, self.args.user_thresh, self.args.feature_thresh)
         user_dict, item_dict = get_user_item_dict(sentiment_data)
@@ -110,8 +114,8 @@ class YelpDataset():
         for i in range(len(sentiment_data)):
             sentiment_data[i][0] = user_name_dict[sentiment_data[i][0]]
             sentiment_data[i][1] = item_name_dict[sentiment_data[i][1]]
-            for j in range(len(sentiment_data[i, 2:])):
-                sentiment_data[i, j + 2][0] = feature_name_dict[sentiment_data[i, j + 2][0]]
+            for j in range(len(sentiment_data[i]) - 2):
+                sentiment_data[i][j+2][0] = feature_name_dict[sentiment_data[i][j + 2][0]]
 
         renamed_user_item_date_dict = {}
         for key, value in user_item_date_dict.items():
@@ -234,6 +238,6 @@ class YelpDataset():
         return False
 
 
-def yelp_preprocessing(pre_processing_args):
-    rec_dataset = YelpDataset(pre_processing_args)
+def amazon_preprocessing(pre_processing_args):
+    rec_dataset = AmazonDataset(pre_processing_args)
     return rec_dataset
