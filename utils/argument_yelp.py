@@ -55,17 +55,3 @@ def arg_parse_exp_optimize():
     parser.add_argument("--test_num", dest="test_num", type=int, default=10, help="the # of users to generate explanation")
     parser.add_argument("--save_path", dest="save_path", type=str, default="./explanation_objs/", help="save the conterfactual explanation results")
     return parser.parse_args()
-
-
-def arg_parse_exp_evaluation():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", dest="dataset", type=str, default="yelp")
-    parser.add_argument("--base_model_path", dest="base_model_path", type=str, default="./logs/")
-    parser.add_argument("--data_obj_path", dest="data_obj_path", type=str, 
-        default="./dataset_objs/", help="the path to the saved dataset object in the training phase")
-    parser.add_argument("--exp_obj_path", dest="exp_obj_path", type=str, default="./explanation_objs/")
-    parser.add_argument("--gpu", dest="gpu", action="store_false", help="whether to use gpu")
-    parser.add_argument("--cuda", dest="cuda", type=str, default='0', help="which cuda")
-    return parser.parse_args()
-
-
