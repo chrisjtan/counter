@@ -71,7 +71,6 @@ class ExpOptimizationModel(torch.nn.Module):
         exp_nums = []
         exp_complexities = []
         no_exp_count = 0
-        # frequent_users = list(dict(sorted(self.rec_dataset.user_hist_inter_dict.items(), key=lambda item: len(item[1]), reverse=True)).keys())
         
         for user, items in tqdm.tqdm(list(self.rec_dict.items())[:self.exp_args.test_num]):
             items = self.rec_dict[user]
@@ -90,15 +89,13 @@ class ExpOptimizationModel(torch.nn.Module):
                     margin_score,
                     mask_vec)
                 if explanation_features is None:
-                    print('no explanation for user %d and item %d' % (user, item))
+                    # print('no explanation for user %d and item %d' % (user, item))
                     no_exp_count += 1
                 else:
                     self.u_i_exp_dict[(user, item)] = explanation_features
                     exp_nums.append(exp_num)
                     exp_complexities.append(exp_complexity)
         print('ave num: ', np.mean(exp_nums), 'ave complexity: ', np.mean(exp_complexities))
-        print('totally %d explanation generation failed for %d recommendation, successful rate is: %2f'
-            % (no_exp_count, self.exp_args.test_num * self.exp_args.rec_k, 1 - (no_exp_count / (self.exp_args.test_num * self.exp_args.rec_k))))
         return True
     
     def explain(self, user_feature, item_feature, margin_score, mask_vec):
