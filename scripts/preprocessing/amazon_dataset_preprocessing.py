@@ -204,7 +204,7 @@ class AmazonDataset():
         training_data = []
         item_set = set(self.items)
         for user, items in self.user_hist_inter_dict.items():
-            items = items[:-self.args.test_length]
+            items = items[:-(self.args.test_length+self.args.val_length)]
             training_pairs = sample_training_pairs(
                 user, 
                 items, 
