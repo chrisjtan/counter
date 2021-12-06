@@ -71,8 +71,11 @@ class ExpOptimizationModel(torch.nn.Module):
         exp_nums = []
         exp_complexities = []
         no_exp_count = 0
-        
-        for user, items in tqdm.tqdm(list(self.rec_dict.items())[:self.exp_args.test_num]):
+        if self.exp_args.test_num == -1:
+            test_num = len(list(self.rec_dict.items()))
+        else:
+            test_num = self.exp_args.test_num
+        for user, items in tqdm.tqdm(list(self.rec_dict.items())[:test_num]):
             items = self.rec_dict[user]
             margin_item = items[self.exp_args.rec_k]
             margin_score = self.base_model(self.user_feature_matrix[user].unsqueeze(0), 

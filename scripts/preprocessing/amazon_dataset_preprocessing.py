@@ -26,8 +26,6 @@ class AmazonDataset():
 
         # the interacted items for each user, sorted with date {user:[i1, i2, i3, ...], user:[i1, i2, i3, ...]}
         self.user_hist_inter_dict = {}
-        # self.user_hist_inter_dict_train = {}  # slit train and test
-        # self.user_hist_inter_dict_test = {}
         # the interacted users for each item
         self.item_hist_inter_dict = {}  
 
@@ -143,16 +141,6 @@ class AmazonDataset():
         user_hist_inter_dict = dict(sorted(user_hist_inter_dict.items()))
         item_hist_inter_dict = dict(sorted(item_hist_inter_dict.items()))
 
-        # user_hist_inter_dict_train = {}
-        # user_hist_inter_dict_test = {}
-
-        # for key, value in user_hist_inter_dict.items():
-        #     user = key
-        #     train_items = value[:-self.args.test_length]
-        #     test_items = value[-(self.args.test_length+self.args.val_length):]
-        #     user_hist_inter_dict_train[user] = train_items
-        #     user_hist_inter_dict_test[user] = test_items
-
         users = list(user_hist_inter_dict.keys())
         items = list(item_hist_inter_dict.keys())
 
@@ -161,8 +149,6 @@ class AmazonDataset():
         self.item_name_dict = item_name_dict
         self.feature_name_dict = feature_name_dict
         self.user_hist_inter_dict = user_hist_inter_dict
-        # self.user_hist_inter_dict_train = user_hist_inter_dict_train
-        # self.user_hist_inter_dict_test = user_hist_inter_dict_test
         self.item_hist_inter_dict = item_hist_inter_dict
         self.users = users
         self.items = items

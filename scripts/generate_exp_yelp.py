@@ -2,7 +2,7 @@ import torch
 import pickle
 import os
 from pathlib import Path
-from utils.argument import arg_parse_exp_optimize
+from utils.argument_yelp import arg_parse_exp_optimize
 from models.models import BaseRecModel, ExpOptimizationModel
 
 
@@ -31,7 +31,8 @@ def generate_explanation(exp_args):
     )
 
     opt_model.generate_explanation()
-
+    opt_model.user_side_evaluation()
+    opt_model.model_side_evaluation()
     Path(exp_args.save_path).mkdir(parents=True, exist_ok=True)
     with open(os.path.join(exp_args.save_path, exp_args.dataset + "_explanation_obj.pickle"), 'wb') as outp:
         pickle.dump(opt_model, outp, pickle.HIGHEST_PROTOCOL)

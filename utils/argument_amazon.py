@@ -54,6 +54,6 @@ def arg_parse_exp_optimize():
     parser.add_argument("--lr", dest="lr", type=float, default=0.01, help="learning rate in optimization")
     parser.add_argument("--step", dest="step", type=int, default=1000, help="# of steps in optimization")
     parser.add_argument("--mask_thresh", dest="mask_thresh", type=float, default=0.1, help="threshold for choosing explanations")
-    parser.add_argument("--test_num", dest="test_num", type=int, default=200, help="the # of users to generate explanation")
+    parser.add_argument("--test_num", dest="test_num", type=int, default=-1, help="the # of users to generate explanation")
     parser.add_argument("--save_path", dest="save_path", type=str, default="./explanation_objs/", help="save the conterfactual explanation results")
     return parser.parse_args()

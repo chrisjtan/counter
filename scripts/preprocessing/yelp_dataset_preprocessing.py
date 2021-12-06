@@ -26,8 +26,6 @@ class YelpDataset():
 
         # the interacted items for each user, sorted with date {user:[i1, i2, i3, ...], user:[i1, i2, i3, ...]}
         self.user_hist_inter_dict = {}
-        self.user_hist_inter_dict_train = {}  # slit train and test
-        self.user_hist_inter_dict_test = {}
         # the interacted users for each item
         self.item_hist_inter_dict = {}  
 
@@ -139,19 +137,6 @@ class YelpDataset():
         user_hist_inter_dict = dict(sorted(user_hist_inter_dict.items()))
         item_hist_inter_dict = dict(sorted(item_hist_inter_dict.items()))
 
-        # split train and test data
-        user_hist_inter_dict_train = {}
-        user_hist_inter_dict_test = {}
-
-        for key, value in user_hist_inter_dict.items():
-            user = key
-            # test_length = int(len(value) * self.args.test_ratio)
-            test_length = 5
-            train_items = value[:-test_length]
-            test_items = value[-test_length:]
-            user_hist_inter_dict_train[user] = train_items
-            user_hist_inter_dict_test[user] = test_items
-
         users = list(user_hist_inter_dict.keys())
         items = list(item_hist_inter_dict.keys())
 
@@ -160,8 +145,6 @@ class YelpDataset():
         self.item_name_dict = item_name_dict
         self.feature_name_dict = feature_name_dict
         self.user_hist_inter_dict = user_hist_inter_dict
-        self.user_hist_inter_dict_train = user_hist_inter_dict_train
-        self.user_hist_inter_dict_test = user_hist_inter_dict_test
         self.item_hist_inter_dict = item_hist_inter_dict
         self.users = users
         self.items = items
@@ -174,7 +157,8 @@ class YelpDataset():
     def get_user_item_feature_matrix(self,):
         # exclude test data from the sentiment data to construct matrix
         train_u_i_set = set()
-        for user, items in self.user_hist_inter_dict_train.items():
+        for user, items in self.user_hist_inter_dict.items():
+            items = items[:-self.args.test_length]
             for item in items:
                 train_u_i_set.add((user, item))
 
@@ -201,10 +185,11 @@ class YelpDataset():
         # print(self.user_feature_matrix.shape, self.item_feature_matrix.shape)
         training_data = []
         item_set = set(self.items)
-        for user, training_items in self.user_hist_inter_dict_train.items():
+        for user, items in self.user_hist_inter_dict.items():
+            items = items[:-(self.args.test_length + self.args.val_length)]
             training_pairs = sample_training_pairs(
                 user, 
-                training_items, 
+                items, 
                 item_set, 
                 self.args.sample_ratio)
             for pair in training_pairs:
@@ -216,8 +201,9 @@ class YelpDataset():
     def sample_test(self):
         print('======================= sample test data =======================')
         user_item_label_list = []  # [[u, [item1, item2, ...], [l1, l2, ...]], ...]
-        for user, test_items in self.user_hist_inter_dict_test.items():
-            user_item_label_list.append([user, test_items, np.ones(len(test_items))])  # add the test items
+        for user, items in self.user_hist_inter_dict.items():
+            items = items[-(self.args.test_length + self.args.val_length):]
+            user_item_label_list.append([user, items, np.ones(len(items))])  # add the test items
             negative_items = [item for item in self.items if 
                 item not in self.user_hist_inter_dict[user]]  # the not interacted items
             negative_items = np.random.choice(np.array(negative_items), self.args.neg_length, replace=False)

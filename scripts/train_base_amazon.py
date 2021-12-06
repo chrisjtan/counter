@@ -18,15 +18,10 @@ def train_base_recommendation(train_args, pre_processing_args):
     else:
         device = 'cpu'
 
-    # if first time run this code, uncomment below part
     rec_dataset = dataset_init(pre_processing_args)
     Path(pre_processing_args.save_path).mkdir(parents=True, exist_ok=True)
     with open(os.path.join(pre_processing_args.save_path, pre_processing_args.dataset + "_dataset_obj.pickle"), 'wb') as outp:
         pickle.dump(rec_dataset, outp, pickle.HIGHEST_PROTOCOL)
-    # end
-
-    with open(os.path.join(pre_processing_args.save_path, pre_processing_args.dataset + "_dataset_obj.pickle"), 'rb') as inp:
-        rec_dataset = pickle.load(inp)
 
     train_loader = DataLoader(dataset=UserItemInterDataset(rec_dataset.training_data, 
                                 rec_dataset.user_feature_matrix, 
