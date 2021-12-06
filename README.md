@@ -12,3 +12,4 @@ https://arxiv.org/abs/2108.10539
 - cuda 9
 
 ## Instruction
+Before running the experiments, plase redirect the "--review_dir" and "--sentires_dir" arguments to the location of the review dataset and extracted sentiment dataset. We provide default argument files in the /utils folder.
