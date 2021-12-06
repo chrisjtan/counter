@@ -20,7 +20,6 @@ You may download Amazon Review dataset from https://jmcauley.ucsd.edu/data/amazo
     ```
     source setup.sh
     ```
-    To add python path
 5. Training the base recommender: run:
     ```
     python scripts/train_base_amazon.py
