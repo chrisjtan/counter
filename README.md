@@ -14,5 +14,6 @@ https://arxiv.org/abs/2108.10539
 ## Instruction
 1. Before running the experiments, plase redirect the "--review_dir" and "--sentires_dir" arguments to the location of the review dataset and extracted sentiment dataset. We provide default argument files in the /utils folder.\
 You may download Amazon Review dataset from https://jmcauley.ucsd.edu/data/amazon/ and Yelp Review dataset from https://www.yelp.com/dataset.
-2. The sentiment data are extracted with "Sentires" tool https://github.com/evison/Sentires. A python guide can be found in https://github.com/lileipisces/Sentires-Guide. You can also use any linguistic tool to extract such data. In the dataset/Cell_Phones folder, we provide pre-extracted sentiment data for "Cell_Phones_and_Accessories" dataset for you convenience. But you still need to download the review dataset by yourself.
-3. 
+2. The sentiment data are extracted with "Sentires" tool https://github.com/evison/Sentires. A python guide can be found in https://github.com/lileipisces/Sentires-Guide. You can also use any linguistic tool to extract such data. 
+3. We provide an example on "Cell Phones and Accessories" datasets. The pre-extracted sentiment data is already in the dataset/Cell_Phones_and_Accessories" folder, but you have to download the review dataset by yourself due to github size limit.
+4. 
