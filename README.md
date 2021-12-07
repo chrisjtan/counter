@@ -29,7 +29,7 @@ You may download Amazon Review dataset from https://jmcauley.ucsd.edu/data/amazo
     python scripts/generate_exp_amazon.py
     ```
 ## Reference
-Is you find the method useful, please consider cite the paper:
+If you find the method useful, please consider cite the paper:
 ```
 @inbook{10.1145/3459637.3482420,
 author = {Tan, Juntao and Xu, Shuyuan and Ge, Yingqiang and Li, Yunqi and Chen, Xu and Zhang, Yongfeng},
